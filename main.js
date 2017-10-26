@@ -51,13 +51,17 @@ const makePlayerForClip = clip => {
     el.appendChild(label);
     container.appendChild(label);
     container.appendChild(el);
+    /* This bib covers the youtube logo so we don't accidentally click it and get redirected */
+    const bib = document.createElement("div");
+    bib.setAttribute("style","width:110;height:27;position:relative;left:24;top:-42");
+    container.appendChild(bib);
     CONTAINER.appendChild(container);
 
     /* Set it up to reload properly after finishing playing */
     const onStateChange = state => {
         if (isEndState(state)) {
-            player.seekTo(clip.start);
             player.pauseVideo();
+            player.seekTo(clip.start);
           }
     }
     
