@@ -14,6 +14,8 @@ const makeConfig = (clip,onStateChange) => {
             fs: 1,                  // Hide the full screen button
             cc_load_policy: 0,      // Hide closed captions
             iv_load_policy: 3,      // Hide the Video Annotations
+            rel:0,                  // Hide related videos
+            showInfo:0,             
             start: clip.start,
             end: clip.end,
             autohide: 0              // Hide video controls when playing
