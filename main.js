@@ -4,7 +4,18 @@ const playLink = link => {
     const element = document.getElementById("player");
     element.setAttribute("src",link+"&autoplay=1");
 }
-
+const makeIframe = (name,link) => {
+    const container = document.createElement("div");
+    const label = document.createElement("label");
+    label.innerText = name;
+    const el = document.createElement("iframe");
+    el.setAttribute("width",300);
+    el.setAttribute("height",300);
+    el.setAttribute("src",link);
+    container.appendChild(label);
+    container.appendChild(el);
+    return container;
+}
 const makeButton = (name,link) => {
     const el = document.createElement("button");
     el.onclick = ()=>{
@@ -28,5 +39,5 @@ const links = [
 links.forEach((link,index)=>{
     const container = document.getElementById("buttons");
     const description = descs[index];
-    container.appendChild(makeButton(description,link));
+    container.appendChild(makeIframe(description,link));
 })

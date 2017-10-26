@@ -5,21 +5,19 @@
 <title>406 Error</title>
 </head>
 
-<button onclick="myFunction();return false;">Click me</button>
+<button onclick="loadAPI();return false;">Load API</button>
+<button onclick="">Play Video </button>
 <div id="video"></div>
 <body>
 <script>
 
-function myFunction() {
-
+function loadAPI() {
     document.getElementById("video").innerHTML = "<div id='player'></div>";
-
     // 2. This code loads the IFrame Player API code asynchronously.
-  var tag = document.createElement('script');
-
-  tag.src = "https://www.youtube.com/iframe_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
  // 3. This function creates an <iframe> (and YouTube player)
   //    after the API code downloads.
