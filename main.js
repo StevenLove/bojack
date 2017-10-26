@@ -1,43 +1,113 @@
+const CONTAINER = document.getElementById("buttons");
 
-
-const playLink = link => {
-    const element = document.getElementById("player");
-    element.setAttribute("src",link+"&autoplay=1");
+const makeClip = link => {
+    // get id
+    // get start
+    // get end
+    return ({
+        
+    })
 }
-const makeIframe = (name,link) => {
+
+const playerConfig = {
+    height: '250',
+    width: '250',
+}
+
+const makeConfig = (clip,onStateChange) => {
+    return {
+        height: '250',
+        width: '250',
+        videoId: clip.id,
+        playerVars: {
+            // autoplay: 1,         // Auto-play the video on load
+            controls: 0,            // Show pause/play buttons in player
+            showinfo: 0,            // Hide the video title
+            modestbranding: 1,      // Hide the Youtube Logo
+            fs: 1,                  // Hide the full screen button
+            cc_load_policy: 0,      // Hide closed captions
+            iv_load_policy: 3,      // Hide the Video Annotations
+            start: clip.start,
+            end: clip.end,
+            autohide: 0              // Hide video controls when playing
+        },
+        events: {
+            'onStateChange': onStateChange
+        }
+    }
+}
+
+const isEndState = state => state.data === YT.PlayerState.ENDED;
+const makeDivID = clip => clip.id+"-"+clip.start+"-"+clip.end;
+
+const makePlayerForClip = clip => {
+
+    /* Add Player to click on */
     const container = document.createElement("div");
-    const label = document.createElement("label");
-    label.innerText = name;
-    const el = document.createElement("iframe");
-    el.setAttribute("width",300);
-    el.setAttribute("height",300);
-    el.setAttribute("src",link);
+    container.setAttribute("style","float:left")
+    const el = document.createElement("div");
+    el.setAttribute("id",makeDivID(clip));
+    const label = document.createElement("h3");
+    label.innerText = clip.label;
+    el.appendChild(label);
     container.appendChild(label);
     container.appendChild(el);
-    return container;
-}
-const makeButton = (name,link) => {
-    const el = document.createElement("button");
-    el.onclick = ()=>{
-        console.log("playing link",link);
-        playLink(link)
-    };
-    el.innerHTML = name;
-    return el;
-}
-const descs = [
-    "*nickers* Well that was another one in a series of regrettable life choices.",
-    "Yes."
-]
-const links = [
-    "https://www.youtube.com/embed/ZChnW2oMfTY?start=130&end=135",
-    // "https://www.youtube.com/v/ZChnW2oMfTY?start=130&end=135",
-    "https://www.youtube.com/embed/ZChnW2oMfTY?rel=0&start=61&end=62"
-]
+    CONTAINER.appendChild(container);
 
+    /* Set it up to reload properly after finishing playing */
+    const onStateChange = state => {
+        if (isEndState(state)) {
+            player.loadVideoById({
+              videoId: clip.id,
+              startSeconds: clip.start,
+              endSeconds: clip.end
+            });
+            player.pauseVideo();
+          }
+    }
+    
+    /* make the player */
+    const config = makeConfig(clip,onStateChange);
+    const player = new YT.Player(makeDivID(clip), config);
 
-links.forEach((link,index)=>{
-    const container = document.getElementById("buttons");
-    const description = descs[index];
-    container.appendChild(makeIframe(description,link));
-})
+}
+
+const parseClip = str => {
+    // https://www.youtube.com/v/ZChnW2oMfTY?start=61&end=62  "Yes."
+    const regex = /\/v\/(.*)\?start=(\d*)&end=(\d*)\s+"?([^"]*)"?/;
+    const results = str.match(regex);
+    const id = results[1];
+    const start = results[2];
+    const end = results[3];
+    const label = results[4];
+    return {
+        id:id,
+        start:start,
+        end:end,
+        label:label
+    }
+}
+
+var clips = [
+    'https://www.youtube.com/v/ZChnW2oMfTY?start=32&end=33  "I\'m incredibly drunk."',
+    'https://www.youtube.com/v/1zszD_-xM2w?start=23&end=24  "Yes, thank you"',
+    'https://www.youtube.com/v/ZChnW2oMfTY?start=57&end=61  "It takes a lot to get me drunk"',
+    'https://www.youtube.com/v/Qr6o5uDjBRI?start=219&end=261 "END THEME"',
+    'https://www.youtube.com/v/Jxw1PVdFVso?start=11&end=13  "I\'m sorry for everything"',
+    'https://www.youtube.com/v/ZChnW2oMfTY?start=61&end=62  "Yes."',
+    'https://www.youtube.com/v/ZChnW2oMfTY?start=130&end=135 "Regrettable life choices."',
+    'https://www.youtube.com/v/ak9QV2Zu7CU?start=22&end=23  "I\'m sorry."',
+    'https://www.youtube.com/v/ak9QV2Zu7CU?start=21&end=22  "Yes"',
+    'https://www.youtube.com/v/ak9QV2Zu7CU?start=26&end=27  "I said I\'m sorry."',
+    'https://www.youtube.com/v/ak9QV2Zu7CU?start=153&end=156 "I don\'t know why I came here."',
+    'https://www.youtube.com/v/ak9QV2Zu7CU?start=221&end=226 "OMINOUS STRUM"',
+    'https://www.youtube.com/v/QWbFuALLIDA?start=40&end=45  "Let\'s get you liquored up"',
+    'https://www.youtube.com/v/fIg3XmHWoT0?start=4&end=6  "Hey."',
+    'https://www.youtube.com/v/fIg3XmHWoT0?start=124&end=125 "Hey!"'
+]
+clips = clips.map(parseClip);
+
+function onYouTubePlayerAPIReady() {
+    clips.forEach(clip=>makePlayerForClip(clip))
+}
+
