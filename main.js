@@ -1,9 +1,8 @@
 const CONTAINER = document.getElementById("buttons");
-var counter = 0;
 
 const makeConfig = (clip,onStateChange) => {
     return {
-        height: '150',
+        height: '230',
         width: '150',
         videoId: clip.id,
         playerVars: {
@@ -43,7 +42,7 @@ const makePlayerForClip = clip => {
 
     /* Add Player to click on */
     const container = document.createElement("div");
-    container.setAttribute("style","width:165;height:220;padding-bottom:15px; padding-left:15px;float:left;background-color:" + makeRandomColor())
+    container.setAttribute("style","width:165;height:220;padding-bottom:15px; padding-left:15px;float:left;overflow:hidden;background-color:" + makeRandomColor())
     const el = document.createElement("div");
     el.setAttribute("id",makeDivID(clip));
     const label = document.createElement("h3");
@@ -51,15 +50,6 @@ const makePlayerForClip = clip => {
     el.appendChild(label);
     container.appendChild(label);
     container.appendChild(el);
-    /* This bib covers the youtube logo so we don't accidentally click it and get redirected */
-    const bib = document.createElement("div");
-    // good attributes: w: 110, h: 27, left:24, top:-42
-    bib.setAttribute("style","width:130;height:47;position:relative;left:14;top:-52;background-color:red;z-index:999");
-    bib.onclick=()=>{
-        ++counter;
-        document.getElementById("counter").innerHTML = counter;
-    }
-    container.appendChild(bib);
     CONTAINER.appendChild(container);
 
     /* Set it up to reload properly after finishing playing */
