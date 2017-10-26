@@ -1,23 +1,10 @@
 const CONTAINER = document.getElementById("buttons");
 
-const makeClip = link => {
-    // get id
-    // get start
-    // get end
-    return ({
-        
-    })
-}
-
-const playerConfig = {
-    height: '250',
-    width: '250',
-}
 
 const makeConfig = (clip,onStateChange) => {
     return {
-        height: '250',
-        width: '250',
+        height: '150',
+        width: '150',
         videoId: clip.id,
         playerVars: {
             // autoplay: 1,         // Auto-play the video on load
@@ -39,12 +26,22 @@ const makeConfig = (clip,onStateChange) => {
 
 const isEndState = state => state.data === YT.PlayerState.ENDED;
 const makeDivID = clip => clip.id+"-"+clip.start+"-"+clip.end;
+const randomByte = () => {
+    const val = Math.floor((1-Math.pow(Math.random(),3))*256);
+    if(val < 16){
+        return "0"+val.toString(16)
+    }
+    return val.toString(16);
+}
+const makeRandomColor = () => {
+    return "#"+randomByte()+randomByte()+randomByte();
+}
 
 const makePlayerForClip = clip => {
 
     /* Add Player to click on */
     const container = document.createElement("div");
-    container.setAttribute("style","float:left")
+    container.setAttribute("style","width:165;height:220;padding-bottom:15px; padding-left:15px;float:left;background-color:" + makeRandomColor())
     const el = document.createElement("div");
     el.setAttribute("id",makeDivID(clip));
     const label = document.createElement("h3");
