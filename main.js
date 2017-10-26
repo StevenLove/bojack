@@ -1,5 +1,5 @@
 const CONTAINER = document.getElementById("buttons");
-
+var counter = 0;
 
 const makeConfig = (clip,onStateChange) => {
     return {
@@ -53,7 +53,12 @@ const makePlayerForClip = clip => {
     container.appendChild(el);
     /* This bib covers the youtube logo so we don't accidentally click it and get redirected */
     const bib = document.createElement("div");
-    bib.setAttribute("style","width:110;height:27;position:relative;left:24;top:-42;background-color:red");
+    // good attributes: w: 110, h: 27, left:24, top:-42
+    bib.setAttribute("style","width:130;height:47;position:relative;left:14;top:-52;background-color:red;z-index:999");
+    bib.onclick=()=>{
+        ++counter;
+        document.getElementById("counter").innerHTML = counter;
+    }
     container.appendChild(bib);
     CONTAINER.appendChild(container);
 
