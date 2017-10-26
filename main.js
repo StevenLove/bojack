@@ -54,11 +54,7 @@ const makePlayerForClip = clip => {
     /* Set it up to reload properly after finishing playing */
     const onStateChange = state => {
         if (isEndState(state)) {
-            player.loadVideoById({
-              videoId: clip.id,
-              startSeconds: clip.start,
-              endSeconds: clip.end
-            });
+            player.seekTo(clip.start);
             player.pauseVideo();
           }
     }
