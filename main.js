@@ -20,12 +20,21 @@ const makeConfig = (clip,onStateChange) => {
             autohide: 0              // Hide video controls when playing
         },
         events: {
-            'onStateChange': onStateChange
+            'onStateChange': onStateChange,
+            'onPlayerReady': event => event.target.setPlaybackQuality('small'),
+            'onPlaybackQualityChange': event => {
+                const newq = event.target.getPlaybackQuality();
+                console.log("new quality",newq);
+                if(newq != "small"){
+                    event.target.setPlaybackQuality('small');
+                }
+            }
         }
     }
 }
 
 const isEndState = state => state.data === YT.PlayerState.ENDED;
+const isBufferState = state => state.data === YT.PlayerState.BUFFERING;
 const makeDivID = clip => clip.id+"-"+clip.start+"-"+clip.end;
 const randomByte = () => {
     const val = Math.floor((1-Math.pow(Math.random(),3))*256);
@@ -57,7 +66,10 @@ const makePlayerForClip = clip => {
         if (isEndState(state)) {
             player.pauseVideo();
             player.seekTo(clip.start);
-          }
+        }
+        if (isBufferState(state)) {
+            player.setPlaybackQuality('small');
+        }
     }
     
     /* make the player */
@@ -83,21 +95,31 @@ const parseClip = str => {
 }
 
 var clips = [
-    'https://www.youtube.com/v/ZChnW2oMfTY?start=32&end=33  "I\'m incredibly drunk."',
-    'https://www.youtube.com/v/1zszD_-xM2w?start=23&end=24  "Yes, thank you"',
-    'https://www.youtube.com/v/ZChnW2oMfTY?start=57&end=61  "It takes a lot to get me drunk"',
-    'https://www.youtube.com/v/Qr6o5uDjBRI?start=219&end=261 "END THEME"',
-    'https://www.youtube.com/v/Jxw1PVdFVso?start=11&end=13  "I\'m sorry for everything"',
+    // Greetings
+    'https://www.youtube.com/v/fIg3XmHWoT0?start=4&end=6  "Hey."',
+    'https://www.youtube.com/v/fIg3XmHWoT0?start=124&end=125 "Hey!"',
+    'https://www.youtube.com/v/fIg3XmHWoT0?start=149&end=152 "Bojack. Horseman, obviously"',  
+    'https://www.youtube.com/v/pX-cplIttUU?start=101&end=106 "My name is bojack *hi* like you didn\'t know."',  
+    // Affirmation
     'https://www.youtube.com/v/ZChnW2oMfTY?start=61&end=62  "Yes."',
-    'https://www.youtube.com/v/ZChnW2oMfTY?start=130&end=135 "Regrettable life choices."',
-    'https://www.youtube.com/v/ak9QV2Zu7CU?start=22&end=23  "I\'m sorry."',
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=21&end=22  "Yes"',
+    'https://www.youtube.com/v/1zszD_-xM2w?start=23&end=24  "Yes, thank you"',
+    // Drinking
+    'https://www.youtube.com/v/QWbFuALLIDA?start=40&end=45  "Let\'s get you liquored up"',
+    'https://www.youtube.com/v/ZChnW2oMfTY?start=32&end=33  "I\'m incredibly drunk."',
+    'https://www.youtube.com/v/ZChnW2oMfTY?start=57&end=61  "It takes a lot to get me drunk"',
+    'https://www.youtube.com/v/pX-cplIttUU?start=79&end=81 "You call yourself drunks?"',
+    // Apologies
+    'https://www.youtube.com/v/ak9QV2Zu7CU?start=22&end=23  "I\'m sorry."',
+    'https://www.youtube.com/v/Jxw1PVdFVso?start=11&end=13  "I\'m sorry for everything"',
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=26&end=27  "I said I\'m sorry."',
+    // Exits
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=153&end=156 "I don\'t know why I came here."',
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=221&end=226 "OMINOUS STRUM"',
-    'https://www.youtube.com/v/QWbFuALLIDA?start=40&end=45  "Let\'s get you liquored up"',
-    'https://www.youtube.com/v/fIg3XmHWoT0?start=4&end=6  "Hey."',
-    'https://www.youtube.com/v/fIg3XmHWoT0?start=124&end=125 "Hey!"'
+    'https://www.youtube.com/v/Qr6o5uDjBRI?start=219&end=261 "END THEME"',
+    
+    
+    
 ]
 clips = clips.map(parseClip);
 
