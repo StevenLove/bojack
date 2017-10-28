@@ -21,7 +21,10 @@ const makeConfig = (clip,onStateChange) => {
         },
         events: {
             'onStateChange': onStateChange,
-            'onPlayerReady': event => event.target.setPlaybackQuality('small'),
+            'onPlayerReady': event => {
+                event.target.setPlaybackQuality('small');
+                event.target.setVolume(100);
+            },
             'onPlaybackQualityChange': event => {
                 const newq = event.target.getPlaybackQuality();
                 console.log("new quality",newq);
@@ -75,6 +78,7 @@ const makePlayerForClip = clip => {
     /* make the player */
     const config = makeConfig(clip,onStateChange);
     const player = new YT.Player(makeDivID(clip), config);
+    
 
 }
 
@@ -109,14 +113,17 @@ var clips = [
     'https://www.youtube.com/v/ZChnW2oMfTY?start=32&end=33  "I\'m incredibly drunk."',
     'https://www.youtube.com/v/ZChnW2oMfTY?start=57&end=61  "It takes a lot to get me drunk"',
     'https://www.youtube.com/v/pX-cplIttUU?start=79&end=81 "You call yourself drunks?"',
+    'https://www.youtube.com/v/9IBWPO-Xxg0?start=41&end=43   "You wanna grab a cup of vodka?"',
     // Apologies
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=22&end=23  "I\'m sorry."',
     'https://www.youtube.com/v/Jxw1PVdFVso?start=11&end=13  "I\'m sorry for everything"',
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=26&end=27  "I said I\'m sorry."',
+    'https://www.youtube.com/v/mv92InpX5cU?start=101&end=102 "I don\'t know"',
     // Exits
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=153&end=156 "I don\'t know why I came here."',
     'https://www.youtube.com/v/ak9QV2Zu7CU?start=221&end=226 "OMINOUS STRUM"',
     'https://www.youtube.com/v/Qr6o5uDjBRI?start=219&end=261 "END THEME"',
+    'https://www.youtube.com/v/wOg6aDK0uWQ?start=0&end=54    "OPENING CREDITS"',
     
     
     
